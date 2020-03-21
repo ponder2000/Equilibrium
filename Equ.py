@@ -45,7 +45,6 @@ for a in trange(len(Underlying_Stock), desc = 'Number of Stock'):
 
 
     #MAX PAIN CALCULATION
-    print("Max Pain Point")
     try:
         max_pain_point = Strike_Price[values.index(min(values))]
     except:
