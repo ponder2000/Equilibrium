@@ -5,6 +5,14 @@ import json
 # list of queries
 Underlying_Stock = fno_list()
 
+# Updating the Underlying_Stock list by
+# converting M&M to M%26M and L&TFH to L%TFH and M&MFIN to M%26MFIN
+for i in range(len(Underlying_Stock)):
+    if '&' in Underlying_Stock[i]:
+        new_stock = Underlying_Stock[i].replace('&','%26')
+        Underlying_Stock[i] = new_stock
+
+
 # to store the searched result
 Underlying_Stock_with_value = dict()
 
@@ -13,7 +21,7 @@ for a in trange(len(Underlying_Stock), desc = 'Number of Stock'):
     print(Underlying_Stock[a])
 
     # getting the values
-    value = Option_Chain_Scrapper(str(Underlying_Stock[a]))
+    value = Option_Chain_Scrapper(Underlying_Stock, str(Underlying_Stock[a]))
     Strike_Price = value['Unnamed: 11_level_0']['Strike Price']
     call_oi = value['CALLS']['OI'].replace('-','0')
     put_oi = value['PUTS']['OI'].replace('-','0')
@@ -25,8 +33,8 @@ for a in trange(len(Underlying_Stock), desc = 'Number of Stock'):
 
     # removing the last total row
     Strike_Price = Strike_Price[:len(Strike_Price)-1]
-    call_oi = call_oi[:len(call_oi)-1]
-    put_oi = put_oi[:len(put_oi)-1]
+    call_oi = call_oi[:len(call_oi)]
+    put_oi = put_oi[:len(put_oi)]
 
     # converting into float for numerical calculation
     Strike_Price = list(map(float, Strike_Price))
@@ -53,9 +61,9 @@ for a in trange(len(Underlying_Stock), desc = 'Number of Stock'):
 
     #Calculating PCR
     try:
-        pcr = sum(put_oi)/sum(call_oi)
+        pcr = put_oi[-1]/call_oi[-1]
     except:
-        print(f"Either of put_oi or call_oi must be zero. len_put_oi, len_call_oi = {len(put_oi)}, {len(call_oi)}")
+        print(f"Either of put_oi or call_oi must be null. put_oi, call_oi = {put_oi}, {call_oi}")
         pcr = 0
 
     # storing the values for further use
@@ -66,7 +74,7 @@ for a in trange(len(Underlying_Stock), desc = 'Number of Stock'):
 
 
 # storing into a json object
-with open('Underlying_Stock_With_value.json', 'w') as f:
+with open('Underlying_Stock_With_value2.json', 'w') as f:
     json.dump(Underlying_Stock_with_value, f)
 
 print("Scraping done!!!")

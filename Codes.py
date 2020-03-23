@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+
+
 symbolCode = '0'
 header = {
  "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36",
@@ -18,8 +20,8 @@ def fno_list():
 
 
 # return the required pandas data frame
-def Option_Chain_Scrapper(stock_name):
-    a = fno_list().index(stock_name)
+def Option_Chain_Scrapper(Underlying_Stock, stock_name):
+    a = Underlying_Stock.index(stock_name)
     my_url_nse = 'https://www1.nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol=' + stock_name
     page_nse = requests.get(my_url_nse,headers=header)
 
